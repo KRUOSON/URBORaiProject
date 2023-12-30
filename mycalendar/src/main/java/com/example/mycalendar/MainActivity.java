@@ -11,14 +11,17 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
+import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.util.Calendar;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     public static int id=0;
@@ -31,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     private ListView lv;
     private Button btadd1;
     private EditText et;
+    FirebaseDatabase calendarfirebase;
+    DatabaseReference calendarref;
+    public ArrayList<String> callist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         lv=findViewById(R.id.listv);
         btadd1=findViewById(R.id.addsomething);
         et=findViewById(R.id.editTextText3);
+
 
         btadd1.setOnClickListener(btaddlis);
         lv.setOnItemClickListener(lvlis);

@@ -11,6 +11,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TimePicker;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,6 +28,11 @@ public class second extends AppCompatActivity {
     private RadioButton RBst;
     private MediaPlayer mediaPlayer;
     private Calendar targetTime;
+    FirebaseDatabase calendarfirebase;
+    DatabaseReference calendarref;
+    boolean noticheck=false;
+    String time;
+    int id=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +83,7 @@ public class second extends AppCompatActivity {
             targetTime.set(Calendar.HOUR_OF_DAY, hour);   //時間
             targetTime.set(Calendar.MINUTE, min);
             targetTime.set(Calendar.SECOND, 0);
+            time=hourOfDay+":"+minute;  
         }
     };
     private RadioGroup.OnCheckedChangeListener RGcListener = new RadioGroup.OnCheckedChangeListener() {
@@ -84,6 +93,7 @@ public class second extends AppCompatActivity {
 
 
             if (checkedId == RBst.getId()) {
+                noticheck=true;
                 // RBst 被选中，计算距离触发时间的差距
                 long timeDifference = targetTime.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
 
@@ -91,6 +101,9 @@ public class second extends AppCompatActivity {
                 if (timeDifference > 0) {
                     scheduleSoundEffect(timeDifference);
                 }
+            }else
+            {
+                noticheck=false;
             }/* else if (checkedId == RBcl.getId()) {
 
                 showAlertDialog("提示", "已选择不提醒");
@@ -140,7 +153,7 @@ public class second extends AppCompatActivity {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(second.this);
                 alertDialogBuilder.setTitle(title);
                 alertDialogBuilder.setMessage(message);
-                alertDialogBuilder.setPositiveButton("确定", null);
+                alertDialogBuilder.setPositiveButton("確定", null);
                 alertDialogBuilder.show();
             }
         });
@@ -148,7 +161,14 @@ public class second extends AppCompatActivity {
     protected View.OnClickListener btlis=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            calendarfirebase=FirebaseDatabase.getInstance();
+            calendarref=calendarfirebase.getReference("message");
+            String day=settime.getText().toString();
+            String idtostring=""+id;
+            String message = tip.getText().toString();
+            calendardbset cal=new calendardbset(day,time,message,noticheck,id);
+            calendarref.child(idtostring).setValue(cal);
+            id++;
             finish();
         }
     };
